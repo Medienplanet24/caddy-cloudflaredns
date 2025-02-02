@@ -9,7 +9,6 @@ on:
   workflow_dispatch: # Allows you to run this workflow manually from the Actions tab
 
 env:
-  DOCKER_CONTAINER_NAME: caddy-cloudflaredns
   DOCKER_TARGET_PLATFORM: linux/amd64, linux/arm64, linux/arm/v8, linux/arm/v7
 
 jobs:
@@ -37,11 +36,7 @@ jobs:
           str=$(cat Dockerfile)
           tag=$(if [[ $str =~ $re ]]; then echo ${BASH_REMATCH[1]}; else exit 1; fi)
           echo "tag=$tag" >> $GITHUB_OUTPUT
-          echo ${{ github.GITHUB_REPOSITORY_OWNER }}
-          echo ${{ github.RUNNER_NAME }}
-          echo ${{ github.repository }}
-          echo ${{ github.REPOSITORY_OWNER }}
-          echo ${{ github.repository_owner }}
+          echo "repo_name=$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
@@ -58,8 +53,8 @@ jobs:
           platforms: ${{ env.DOCKER_TARGET_PLATFORM }}
           push: true
           tags: |
-            ghcr.io/${{ env.DOCKER_USERNAME }}/${{ env.DOCKER_CONTAINER_NAME }}:${{ steps.prepare.outputs.tag }}
-            ghcr.io/${{ env.DOCKER_USERNAME }}/${{ env.DOCKER_CONTAINER_NAME }}:latest
+            ghcr.io/${{ env.repo_name }}:${{ steps.prepare.outputs.tag }}
+            ghcr.io/${{ env.repo_name }}:latest
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
