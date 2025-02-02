@@ -38,6 +38,10 @@ jobs:
           tag=$(if [[ $str =~ $re ]]; then echo ${BASH_REMATCH[1]}; else exit 1; fi)
           echo "tag=$tag" >> $GITHUB_OUTPUT
           echo ${{ github.GITHUB_REPOSITORY_OWNER }}
+          echo ${{ github.RUNNER_NAME }}
+          echo ${{ github.repository }}
+          echo ${{ github.REPOSITORY_OWNER }}
+          echo ${{ github.repository_owner }}
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
