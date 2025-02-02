@@ -18,9 +18,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        if: ${{ !github.event.act }} # skip during local actions testing
-        with:
-          fetch-depth: '0'
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
