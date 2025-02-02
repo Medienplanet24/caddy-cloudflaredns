@@ -32,7 +32,7 @@ jobs:
           re="^FROM caddy:([^-]+)"
           str=$(cat Dockerfile)
           tag=$(if [[ $str =~ $re ]]; then echo ${BASH_REMATCH[1]}; else exit 1; fi)
-          echo "tag=$tag" >> $GITHUB_OUTPUT
+          echo "tag=$tag" >> $GITHUB_ENV
           echo "repo_name=$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
 
       - name: Login to GitHub Container Registry
@@ -50,10 +50,10 @@ jobs:
           platforms: ${{ env.DOCKER_TARGET_PLATFORM }}
           push: true
           tags: |
-            ghcr.io/${{ env.repo_name }}:${{ steps.prepare.outputs.tag }}
+            ghcr.io/${{ env.repo_name }}:${{ env.tag }}
             ghcr.io/${{ env.repo_name }}:latest
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ steps.prepare.outputs.tag }}
+          tag_name: ${{ env.tag }}
