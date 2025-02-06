@@ -1,5 +1,4 @@
 [![Latest Release][version-image]][version-url]
-[![caddy on DockerHub][dockerhub-image]][dockerhub-url]
 [![Docker Build][gh-actions-image]][gh-actions-url]
 
 # caddy-cloudflaredns
